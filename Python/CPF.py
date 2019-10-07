@@ -1,30 +1,32 @@
 from typing import List
 
 class CPF():
-    def validate(self, doc: str = ''):
-        """Validar CPF."""
-        doc = list(self._only_digits(doc))
+    def mask(self, document: str = ''):
+        return "{}.{}.{}-{}".format(document[:3], document[3:6], document[6:9], document[-2:])
 
-        if len(doc) != 11:
+    def validate(self, document: str = ''):
+        document = list(self._hasOnlyDigits(document))
+
+        if len(document) != 11:
             return False
 
-        if self._check_repeated_digits(doc):
+        if self._hasRepeatedDigits(document):
             return False
 
-        return self._generate_first_digit(doc) == doc[9]\
-               and self._generate_second_digit(doc) == doc[10]
+        return self._getFirstDigit(document) == document[9]\
+               and self._getSecondDigit(document) == document[10]
 
-    def _only_digits(self, doc: str = ''):
-        return "".join([x for x in doc if x.isdigit()])
+    def _hasOnlyDigits(self, document: str = ''):
+        return "".join([x for x in document if x.isdigit()])
 
-    def mask(self, doc: str = ''):
-        return "{}.{}.{}-{}".format(doc[:3], doc[3:6], doc[6:9], doc[-2:])
+    def _hasRepeatedDigits(self, document: List[str]):
+        return len(set(document)) == 1
 
-    def _generate_first_digit(self, doc: list):
+    def _getFirstDigit(self, document: list):
         sum = 0
 
         for i in range(10, 1, -1):
-            sum += int(doc[10 - i]) * i
+            sum += int(document[10 - i]) * i
 
         sum = (sum * 10) % 11
 
@@ -33,11 +35,11 @@ class CPF():
 
         return str(sum)
 
-    def _generate_second_digit(self, doc: list):
+    def _getSecondDigit(self, document: list):
         sum = 0
 
         for i in range(11, 1, -1):
-            sum += int(doc[11-i]) * i
+            sum += int(document[11-i]) * i
 
         sum = (sum * 10) % 11
 
@@ -45,6 +47,3 @@ class CPF():
             sum = 0
 
         return str(sum)
-
-    def _check_repeated_digits(self, doc: List[str]):
-        return len(set(doc)) == 1
