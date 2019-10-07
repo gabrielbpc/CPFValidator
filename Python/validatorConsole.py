@@ -1,7 +1,8 @@
-from validator import Validator
+from CPF import CPF
 
-value = input('Digite o CPF:')
+while True:    
+    value = input('Digite o CPF:')
 
-response = Validator.validate(value)
+    response = CPF().validate(value)
 
-print('Este CPF é ' + 'valido' if response else 'invalido')
+    print('Este CPF eh', 'valido' if response else 'invalido')
